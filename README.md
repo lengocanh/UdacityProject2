@@ -10,13 +10,12 @@
 
 This is the python scripts that can be run with Python versions 3.*<br>
 Makesure you have following packages installed:
-1. numpy
+1. flask
 2. pandas
 3. sqlalchemy
 4. sklearn
 5. nltk
 6. plotly
-7. flask
 
 ## Project Motivation<a name="motivation"></a>
 
@@ -91,8 +90,6 @@ The html template to display message categories after users type in their messag
 There are some data in categories has 'related-2', after review some data, I suggest it's not related.
 And I convert all 'related-2' to 'related-0'<br>
 
-Some data has url in the message, I replace url by "urlplaceholder" in tokenize function<br>
-
 Almost of categories are imbalanced, I used  parameters 'clf__estimator__class_weight': ['balanced', 'balanced_subsample']<br>
 
 Some categories have few message can be remove like child_alone, offer, tool, shop as model don't have data to train.<br>
@@ -103,7 +100,7 @@ I want to try more parameters and features, but the training time in my computer
 
 Modify the build_model function to lower or remove parameters to get the model train faster
 
-re.sub is not pickle function, then cannot set the n_jobs param
+re.sub is not pickle function, then cannot set the n_jobs param to run parallel multi train jobs
 
 ## Licensing, Authors, Acknowledgements<a name="licensing"></a>
 
