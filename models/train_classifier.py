@@ -1,7 +1,6 @@
 import sys
 import numpy as np
 import pandas as pd
-import re
 from sqlalchemy import create_engine
 import joblib
 
@@ -19,6 +18,16 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 def load_data(database_filepath):
+    """Load data from sqlite to X, Y and categories names
+
+    Args:
+    database_filepath: string. path to sqlite file
+
+    Returns:
+    X: DataFrame with 1 column message
+    Y: DataFrate with 36 colums of categories
+    category_names: list contain 36 category names
+    """
     engine = create_engine('sqlite:///{}'.format(database_filepath))
     df = pd.read_sql_table('disaster_response', engine)
     X = df['message']
@@ -29,7 +38,14 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    
+    """parse text in to tokens and lemmatize tokens
+
+    Args:
+    text: string. the text need to be tokenize
+
+    Returns:
+    clean_tokens: list of clean tokens
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     clean_tokens = []
@@ -41,6 +57,13 @@ def tokenize(text):
 
 
 def build_model():
+    """Build the model pipeline to clasify token
+
+    Args:
+
+    Returns:
+    cv: GridSearchCV with parameters
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -61,6 +84,16 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """Report the f1 score, precision and recall for each output category of the dataset. 
+
+    Args:
+    model: GridSearchCV model after trained
+    X_test: DataFrame of messages used to test the model
+    Y_test: DataFrame of categories used to test the model
+    category_names: list contain 36 category names
+
+    Returns:
+    """
     Y_pred = model.predict(X_test)
     for cat in category_names:
         print("Classification Report for category " + cat)
@@ -69,6 +102,14 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """Save the trained model in to a file 
+
+    Args:
+    model: GridSearchCV model after trained
+    model_filepath: stirng. File path to save the model
+
+    Returns:
+    """
     joblib.dump(model, model_filepath)
 
 
